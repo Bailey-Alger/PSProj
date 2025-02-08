@@ -1,7 +1,7 @@
 # Bailey Alger 012480373
 
 try {
-    $ADRoot = "DC-consultingfirm", "DC-com"
+    $ADRoot = (Get-ADDomain).DistinguishedName
     $OUCanonicalName = "Finance"
     $OUDisplayName = "Finance"
     $ADPath = "OU=$($OUCanonicalName),$($ADRoot)"
@@ -30,7 +30,7 @@ try {
         $Office = $ADUser.OfficePhone
         $Mobile = $ADUser.MobilePhone
 
-        $status = "[AD] ADding AD User: $($Name) ($($count) of $($numberNewUsers))"
+        $status = "[AD] Adding AD User: $($Name) ($($count) of $($numberNewUsers))"
         Write-Progress -Activity 'c916 Task 2 - Restore' -Status $status -PercentComplete (($count / $numberNewUsers) * 100)
 
         New-ADUser `

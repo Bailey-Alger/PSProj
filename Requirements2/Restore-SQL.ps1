@@ -13,8 +13,21 @@ try {
     # Checks if the database exists and deletes it if it does
     if ($sqlServerObject.Databases[$databaseName]) {
         Write-Host "Database $($databaseName) already exists. Removing..."
-        Invoke-Sqlcmd -ServerInstance $sqlServerInstanceName -Database $databaseName -Username "LabAdmin" -Password 'Passw0rd!' -Query "DROP DATABASE [$databaseName]"
+        $sqlServerObject.Databases[$databaseName].SetOffline()
+        $sqlServerObject.Databases[$databaseName].Drop()
         Write-Host "Database removed."
+
+        $dataFilePath = "C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\ClientDB.mdf"
+        $logFilePath = "C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\ClientDB_log.ldf"
+
+        # Check if the file exists and remove it
+        if (Test-Path $dataFilePath) {
+            Remove-Item $dataFilePath -Force
+        }
+
+        if (Test-Path $logFilePath) {
+            Remove-Item $logFilePath -Force
+        }
     }
 
     # Creates the database
